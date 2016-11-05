@@ -1,0 +1,57 @@
+# author: Calvin Chan
+
+service: sls-auth # NOTE: update this with your service name
+
+provider:
+  name: aws
+  stage: dev
+  region: us-west-2
+  profile: serverless
+  iamRoleStatements:
+    - Effect: Allow
+      Action:
+      - "*"
+      Resource: arn:aws:dynamodb:${self:provider.region}:*:*
+    - Effect: Allow
+      Action:
+      - cognito-sync:*
+      - cognito-identity:*
+      Resource: arn:aws:cognito-identity:*:*:*
+  runtime: nodejs4.3
+
+plugins:
+  - serverless-webpack
+
+functions:
+  login:
+    handler: handler.login
+    events:
+    - http:
+        path: auth/login
+        method: post
+        cors: true
+        Content-Type: application/json
+  signup:
+    handler: handler.signup
+    events:
+    - http:
+        path: auth/signup
+        method: post
+        cors: true
+        Content-Type: application/json
+
+resources:
+  Resources:
+    Dynamo:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: ${self:provider.stage}-accounts
+        AttributeDefinitions:
+          - AttributeName: email
+            AttributeType: S
+        KeySchema:
+          - AttributeName: email
+            KeyType: HASH
+        ProvisionedThroughput:
+          ReadCapacityUnits: 1
+          WriteCapacityUnits: 1
