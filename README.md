@@ -1,6 +1,6 @@
-# Serverless GraphQL Starter Kit
+# Serverless Authentication Starter Kit
 
-A simple starter kit for getting GraphQL working with API Gateway, Lambda, DynamoDB using the Serverless framework.
+A simple starter kit for creating a email/password login system with AWS Cognito, Lambda, and DynamoDB using the Serverless framework.
 
 # Install
 `npm install`
@@ -16,7 +16,7 @@ You will also need to update the region attribute inside `serverless.yml`
 
 # Test
 Create a test user in the database
-`sls webpack invoke -f graphql -p create-user.json`
+`sls webpack invoke -f signup -p account.json`
 
-Get the list of users from the database
-`sls webpack invoke -f graphql -p get-users.json`
+Login and get token from AWS cognito
+`sls webpack invoke -f login -p account.json`
